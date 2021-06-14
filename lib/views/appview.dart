@@ -10,7 +10,9 @@ class _AppViewState extends State<AppView> {
   late List<List> matrix;
   int count = 0;
   late String winner = "X";
+  bool draw = false;
   bool _gameOver = false;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +31,7 @@ class _AppViewState extends State<AppView> {
     return ElevatedButton(
         onPressed: () {
           createMatrix(3, 3);
+          draw = false;
           _gameOver = false;
         },
         child: Text("Play Again"));
@@ -36,7 +39,7 @@ class _AppViewState extends State<AppView> {
 
   Widget showWinnerDetailsButton() {
     return Text(
-      count % 2 == 0 ? "$winner Won" : "$winner Won",
+      draw ? "Draw" : "$winner is the winner",
       style: TextStyle(
           color: Colors.black, fontWeight: FontWeight.w400, fontSize: 25),
     );
@@ -140,6 +143,19 @@ class _AppViewState extends State<AppView> {
         matrix[1][1] != "") {
       setState(() {
         count % 2 == 0 ? winner = "X" : winner = "O";
+        _gameOver = true;
+      });
+    } else if (matrix[0][0] != "" &&
+        matrix[0][1] != "" &&
+        matrix[0][2] != "" &&
+        matrix[1][0] != "" &&
+        matrix[1][1] != "" &&
+        matrix[1][2] != "" &&
+        matrix[2][0] != "" &&
+        matrix[2][1] != "" &&
+        matrix[2][2] != "") {
+      setState(() {
+        draw = true;
         _gameOver = true;
       });
     }
