@@ -10,6 +10,4 @@ Open Project in Terminal
 You're good to go.
 
 ### Screenshots:
-<img src="photos/screenshot1.jpg" width="200">
-<img src="photos/screenshot2.jpg" width="200">
-<img src="photos/screenshot3.jpg" width="200">
+<img src="photos/screenshot1.jpg" width="200"> <img src="photos/screenshot2.jpg" width="200"> <img src="photos/screenshot3.jpg" width="200">
