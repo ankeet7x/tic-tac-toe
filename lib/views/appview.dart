@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:tictactoe/controller/logic_controller.dart';
 
@@ -11,24 +10,10 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   final LogicController controller = Get.put(LogicController());
 
-  @override
-  void initState() {
-    super.initState();
-    createMatrix(3, 3);
-  }
-
-  createMatrix(rows, columns) {
-    setState(() {
-      controller.matrix = List.generate(
-          rows, (_) => List.generate(3, (_) => "", growable: false),
-          growable: false);
-    });
-  }
-
   Widget buildPlayAgainButton() {
     return ElevatedButton(
         onPressed: () {
-          createMatrix(3, 3);
+          controller.createMatrix(3, 3);
           controller.drawValue = false;
           controller.changeValue = false;
         },
@@ -46,44 +31,46 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 3.75,
-          ),
-          controller.gameOver
-              ? showWinnerDetailsButton()
-              : Text(
-                  controller.count % 2 == 0
-                      ? "Player O's turn"
-                      : "Player X's turn",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 25),
-                ),
-          SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [buildBox(0, 0), buildBox(0, 1), buildBox(0, 2)],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [buildBox(1, 0), buildBox(1, 1), buildBox(1, 2)],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [buildBox(2, 0), buildBox(2, 1), buildBox(2, 2)],
-          ),
-          Spacer(),
-          controller.gameOver ? buildPlayAgainButton() : Container(),
-          SizedBox(
-            height: 20,
-          )
-        ],
+      body: Obx(
+        () => Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 3.75,
+            ),
+            controller.gameOver
+                ? showWinnerDetailsButton()
+                : Text(
+                    controller.count % 2 == 0
+                        ? "Player O's turn"
+                        : "Player X's turn",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 25),
+                  ),
+            SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [buildBox(0, 0), buildBox(0, 1), buildBox(0, 2)],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [buildBox(1, 0), buildBox(1, 1), buildBox(1, 2)],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [buildBox(2, 0), buildBox(2, 1), buildBox(2, 2)],
+            ),
+            Spacer(),
+            controller.gameOver ? buildPlayAgainButton() : Container(),
+            SizedBox(
+              height: 20,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -165,17 +152,13 @@ class _AppViewState extends State<AppView> {
           controller.increaseCount();
           if (controller.count % 2 == 0 && controller.matrix[i][j] == '') {
             controller.gameOver
-                ? sendToastMessage()
-                : setState(() {
-                    controller.matrix[i][j] = 'X';
-                  });
+                ? showGameOverMessage()
+                : controller.matrix[i][j] = 'X';
           } else if (controller.count % 2 != 0 &&
               controller.matrix[i][j] == '') {
             controller.gameOver
-                ? sendToastMessage()
-                : setState(() {
-                    controller.matrix[i][j] = 'O';
-                  });
+                ? showGameOverMessage()
+                : controller.matrix[i][j] = 'O';
           }
           if (!controller.gameOver) {
             checkGameStatus();
@@ -207,7 +190,8 @@ class _AppViewState extends State<AppView> {
         ));
   }
 
-  sendToastMessage() {
-    return Fluttertoast.showToast(msg: "Game's already over");
+  showGameOverMessage() {
+    Get.snackbar("Game's already over", "Tap play again to play",
+        backgroundColor: Colors.yellow, colorText: Colors.black);
   }
 }

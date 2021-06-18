@@ -7,17 +7,17 @@ class LogicController extends GetxController {
   var _count = 0.obs;
   late List<List> matrix;
 
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //   createMatrix(3, 3);
-  // }
+  @override
+  void onInit() {
+    super.onInit();
+    createMatrix(3, 3);
+  }
 
-  // createMatrix(rows, columns) {
-  //   matrix = List.generate(
-  //       rows, (_) => List.generate(3, (_) => "", growable: false),
-  //       growable: false);
-  // }
+  createMatrix(rows, columns) {
+    matrix = List.generate(
+        rows, (_) => List.generate(3, (_) => "", growable: false),
+        growable: false);
+  }
 
   bool get gameOver => _gameOver.value;
   String get winner => _winner.value;
