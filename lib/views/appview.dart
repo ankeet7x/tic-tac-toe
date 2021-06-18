@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:tictactoe/controller/logic_controller.dart';
 
 class AppView extends StatefulWidget {
   @override
@@ -7,6 +9,8 @@ class AppView extends StatefulWidget {
 }
 
 class _AppViewState extends State<AppView> {
+  final LogicController controller = Get.put(LogicController());
+
   late List<List> matrix;
   int count = 0;
   late String winner = "X";
@@ -183,14 +187,26 @@ class _AppViewState extends State<AppView> {
           }
         },
         child: Container(
-          margin: EdgeInsets.all(10),
-          color: Colors.blue,
-          height: 90,
-          width: 90,
+          height: MediaQuery.of(context).size.width * 0.30,
+          width: MediaQuery.of(context).size.width * 0.30,
+          decoration: BoxDecoration(
+              border: Border(
+                  bottom: i == 0
+                      ? BorderSide(width: 15, color: Colors.yellow)
+                      : BorderSide.none,
+                  top: i == 2
+                      ? BorderSide(width: 15, color: Colors.yellow)
+                      : BorderSide.none,
+                  right: j == 0
+                      ? BorderSide(width: 15, color: Colors.yellow)
+                      : BorderSide.none,
+                  left: j == 2
+                      ? BorderSide(width: 15, color: Colors.yellow)
+                      : BorderSide.none)),
           child: Center(
             child: Text(
               matrix[i][j].toString(),
-              style: TextStyle(color: Colors.white, fontSize: 55),
+              style: TextStyle(color: Colors.black, fontSize: 55),
             ),
           ),
         ));
