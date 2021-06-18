@@ -11,12 +11,6 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   final LogicController controller = Get.put(LogicController());
 
-  late List<List> matrix;
-  int count = 0;
-  late String winner = "X";
-  bool draw = false;
-  bool _gameOver = false;
-
   @override
   void initState() {
     super.initState();
@@ -25,7 +19,7 @@ class _AppViewState extends State<AppView> {
 
   createMatrix(rows, columns) {
     setState(() {
-      matrix = List.generate(
+      controller.matrix = List.generate(
           rows, (_) => List.generate(3, (_) => "", growable: false),
           growable: false);
     });
@@ -35,15 +29,15 @@ class _AppViewState extends State<AppView> {
     return ElevatedButton(
         onPressed: () {
           createMatrix(3, 3);
-          draw = false;
-          _gameOver = false;
+          controller.drawValue = false;
+          controller.changeValue = false;
         },
         child: Text("Play Again"));
   }
 
   Widget showWinnerDetailsButton() {
     return Text(
-      draw ? "Draw" : "$winner is the winner",
+      controller.draw ? "Draw" : "${controller.winner} is the winner",
       style: TextStyle(
           color: Colors.black, fontWeight: FontWeight.w400, fontSize: 25),
     );
@@ -58,10 +52,12 @@ class _AppViewState extends State<AppView> {
           SizedBox(
             height: MediaQuery.of(context).size.height / 3.75,
           ),
-          _gameOver
+          controller.gameOver
               ? showWinnerDetailsButton()
               : Text(
-                  count % 2 == 0 ? "Player O's turn" : "Player X's turn",
+                  controller.count % 2 == 0
+                      ? "Player O's turn"
+                      : "Player X's turn",
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w400,
@@ -83,7 +79,7 @@ class _AppViewState extends State<AppView> {
             children: [buildBox(2, 0), buildBox(2, 1), buildBox(2, 2)],
           ),
           Spacer(),
-          _gameOver ? buildPlayAgainButton() : Container(),
+          controller.gameOver ? buildPlayAgainButton() : Container(),
           SizedBox(
             height: 20,
           )
@@ -93,96 +89,95 @@ class _AppViewState extends State<AppView> {
   }
 
   checkGameStatus() {
-    if (matrix[0][1] == matrix[0][0] &&
-        matrix[0][0] == matrix[0][2] &&
-        matrix[0][0] != "") {
-      setState(() {
-        count % 2 == 0 ? winner = "X" : winner = "O";
-        _gameOver = true;
-      });
-    } else if (matrix[1][1] == matrix[1][0] &&
-        matrix[1][0] == matrix[1][2] &&
-        matrix[1][0] != "") {
-      setState(() {
-        count % 2 == 0 ? winner = "X" : winner = "O";
-        _gameOver = true;
-      });
-    } else if (matrix[2][1] == matrix[2][0] &&
-        matrix[2][0] == matrix[2][2] &&
-        matrix[2][0] != "") {
-      setState(() {
-        count % 2 == 0 ? winner = "X" : winner = "O";
-        _gameOver = true;
-      });
-    } else if (matrix[1][0] == matrix[0][0] &&
-        matrix[0][0] == matrix[2][0] &&
-        matrix[0][0] != "") {
-      setState(() {
-        count % 2 == 0 ? winner = "X" : winner = "O";
-        _gameOver = true;
-      });
-    } else if (matrix[0][1] == matrix[1][1] &&
-        matrix[1][1] == matrix[2][1] &&
-        matrix[1][1] != "") {
-      setState(() {
-        count % 2 == 0 ? winner = "X" : winner = "O";
-        _gameOver = true;
-      });
-    } else if (matrix[0][2] == matrix[1][2] &&
-        matrix[0][2] == matrix[2][2] &&
-        matrix[0][2] != "") {
-      setState(() {
-        count % 2 == 0 ? winner = "X" : winner = "O";
-        _gameOver = true;
-      });
-    } else if (matrix[0][0] == matrix[1][1] &&
-        matrix[1][1] == matrix[2][2] &&
-        matrix[1][1] != "") {
-      setState(() {
-        count % 2 == 0 ? winner = "X" : winner = "O";
-        _gameOver = true;
-      });
-    } else if (matrix[2][0] == matrix[1][1] &&
-        matrix[1][1] == matrix[0][2] &&
-        matrix[1][1] != "") {
-      setState(() {
-        count % 2 == 0 ? winner = "X" : winner = "O";
-        _gameOver = true;
-      });
-    } else if (matrix[0][0] != "" &&
-        matrix[0][1] != "" &&
-        matrix[0][2] != "" &&
-        matrix[1][0] != "" &&
-        matrix[1][1] != "" &&
-        matrix[1][2] != "" &&
-        matrix[2][0] != "" &&
-        matrix[2][1] != "" &&
-        matrix[2][2] != "") {
-      setState(() {
-        draw = true;
-        _gameOver = true;
-      });
+    if (controller.matrix[0][1] == controller.matrix[0][0] &&
+        controller.matrix[0][0] == controller.matrix[0][2] &&
+        controller.matrix[0][0] != "") {
+      controller.count % 2 == 0
+          ? controller.winnerValue = "X"
+          : controller.winnerValue = "O";
+      controller.changeValue = true;
+    } else if (controller.matrix[1][1] == controller.matrix[1][0] &&
+        controller.matrix[1][0] == controller.matrix[1][2] &&
+        controller.matrix[1][0] != "") {
+      controller.count % 2 == 0
+          ? controller.winnerValue = "X"
+          : controller.winnerValue = "O";
+      controller.changeValue = true;
+    } else if (controller.matrix[2][1] == controller.matrix[2][0] &&
+        controller.matrix[2][0] == controller.matrix[2][2] &&
+        controller.matrix[2][0] != "") {
+      controller.count % 2 == 0
+          ? controller.winnerValue = "X"
+          : controller.winnerValue = "O";
+      controller.changeValue = true;
+    } else if (controller.matrix[1][0] == controller.matrix[0][0] &&
+        controller.matrix[0][0] == controller.matrix[2][0] &&
+        controller.matrix[0][0] != "") {
+      controller.count % 2 == 0
+          ? controller.winnerValue = "X"
+          : controller.winnerValue = "O";
+      controller.changeValue = true;
+    } else if (controller.matrix[0][1] == controller.matrix[1][1] &&
+        controller.matrix[1][1] == controller.matrix[2][1] &&
+        controller.matrix[1][1] != "") {
+      controller.count % 2 == 0
+          ? controller.winnerValue = "X"
+          : controller.winnerValue = "O";
+      controller.changeValue = true;
+    } else if (controller.matrix[0][2] == controller.matrix[1][2] &&
+        controller.matrix[0][2] == controller.matrix[2][2] &&
+        controller.matrix[0][2] != "") {
+      controller.count % 2 == 0
+          ? controller.winnerValue = "X"
+          : controller.winnerValue = "O";
+      controller.changeValue = true;
+    } else if (controller.matrix[0][0] == controller.matrix[1][1] &&
+        controller.matrix[1][1] == controller.matrix[2][2] &&
+        controller.matrix[1][1] != "") {
+      controller.count % 2 == 0
+          ? controller.winnerValue = "X"
+          : controller.winnerValue = "O";
+      controller.changeValue = true;
+    } else if (controller.matrix[2][0] == controller.matrix[1][1] &&
+        controller.matrix[1][1] == controller.matrix[0][2] &&
+        controller.matrix[1][1] != "") {
+      controller.count % 2 == 0
+          ? controller.winnerValue = "X"
+          : controller.winnerValue = "O";
+      controller.changeValue = true;
+    } else if (controller.matrix[0][0] != "" &&
+        controller.matrix[0][1] != "" &&
+        controller.matrix[0][2] != "" &&
+        controller.matrix[1][0] != "" &&
+        controller.matrix[1][1] != "" &&
+        controller.matrix[1][2] != "" &&
+        controller.matrix[2][0] != "" &&
+        controller.matrix[2][1] != "" &&
+        controller.matrix[2][2] != "") {
+      controller.drawValue = true;
+      controller.changeValue = true;
     }
   }
 
   Widget buildBox(i, j) {
     return GestureDetector(
         onTap: () {
-          count++;
-          if (count % 2 == 0 && matrix[i][j] == '') {
-            _gameOver
+          controller.increaseCount();
+          if (controller.count % 2 == 0 && controller.matrix[i][j] == '') {
+            controller.gameOver
                 ? sendToastMessage()
                 : setState(() {
-                    matrix[i][j] = 'X';
+                    controller.matrix[i][j] = 'X';
                   });
-          } else if (count % 2 != 0 && matrix[i][j] == '') {
-            _gameOver
+          } else if (controller.count % 2 != 0 &&
+              controller.matrix[i][j] == '') {
+            controller.gameOver
                 ? sendToastMessage()
                 : setState(() {
-                    matrix[i][j] = 'O';
+                    controller.matrix[i][j] = 'O';
                   });
           }
-          if (!_gameOver) {
+          if (!controller.gameOver) {
             checkGameStatus();
           }
         },
@@ -205,7 +200,7 @@ class _AppViewState extends State<AppView> {
                       : BorderSide.none)),
           child: Center(
             child: Text(
-              matrix[i][j].toString(),
+              controller.matrix[i][j].toString(),
               style: TextStyle(color: Colors.black, fontSize: 55),
             ),
           ),
